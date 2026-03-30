@@ -2,14 +2,16 @@ const express = require('express');
 const serverless = require('serverless-http');
 const path = require('path');
 const fs = require('fs');
+const ejs = require('ejs');
 const app = express();
 const router = express.Router();
 
-const rootDir = process.cwd();
-
 app.set('view engine', 'ejs');
-app.set('views', path.join(rootDir, 'views'));
-app.use(express.static(path.join(rootDir, 'public')));
+app.engine('ejs', ejs.renderFile);
+app.set('views', path.join(__dirname, '../views'));
+app.use(express.static(path.join(__dirname, '../public')));
+
+const rootDir = path.join(__dirname, '..');
 
 const arabicNumbers = {
     'الأول': 1, 'الثاني': 2, 'الثالث': 3, 'الرابع': 4, 'الخامس': 5, 'السادس': 6, 'السابع': 7, 'الثامن': 8, 'التاسع': 9, 'العاشر': 10,
