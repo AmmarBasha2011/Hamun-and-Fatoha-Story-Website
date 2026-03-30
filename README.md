@@ -3,9 +3,12 @@
 [![Status: Immortal](https://img.shields.io/badge/Status-Immortal-gold?style=for-the-badge&logo=probot)](/)
 [![Version: 5.5](https://img.shields.io/badge/Web_Version-5.5-cyan?style=for-the-badge)](/)
 [![API: 6.0](https://img.shields.io/badge/API_Version-6.0-blueviolet?style=for-the-badge)](/)
-[![PWA: Ready](https://img.shields.io/badge/PWA-Ready-green?style=for-the-badge)](/)
+- **PWA:** Ready
+- **Author:** Ammar
+- **License:** GNU GPLv3
 
 > *"In the depths of the Ammari Galaxy, words are more than just ink—they are the blueprints of destiny."*
+
 
 Welcome to the **Hamun & Fatuha Saga**, an immersive storytelling platform and lore-rich web application. This project is a sophisticated digital archive for the epic struggle between the dynasties of Mercy (Hamun), Power (Fatuha), and Mind (Ententooth). 
 
@@ -221,7 +224,7 @@ python3 extract_keywords.py
 ---
 
 ## 📜 License
-This project is licensed under the ISC License. 
+This project is licensed under the GNU GPLv3 License. 
 
-**Developed by the Ammari Tech Team.**
+**Developed by Ammar.**
 *"Words endure longer than stars."*

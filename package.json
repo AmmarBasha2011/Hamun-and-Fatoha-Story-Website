@@ -9,8 +9,8 @@
     "build": "echo 'No build step needed'"
   },
   "keywords": [],
-  "author": "Ammari",
-  "license": "ISC",
+  "author": "Ammar",
+  "license": "GPL-3.0-or-later",
   "type": "commonjs",
   "dependencies": {
     "ejs": "^3.1.10",
