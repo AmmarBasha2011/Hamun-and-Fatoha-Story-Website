@@ -1,0 +1,111 @@
+<%- include('layout_head', { title: "Nexus Core API Documentation - V6" }) %>
+
+<div class="story-container" style="max-width: 1100px;">
+    <header class="story-header" style="margin-top: 4rem;">
+        <span class="meta">V6.0 "NEXUS CORE" ARCHITECTURE</span>
+        <h1>موسوعة المجرّة: واجهة المطورين</h1>
+        <p style="color: var(--text-muted); line-height: 1.8;">تم توسيع النظام ليشمل أكثر من 50 نقطة وصول (Endpoints) تغطي كافة جوانب الملحمة، من الإحصائيات المتقدمة إلى البيانات الوصفية للمواسم والأنماط البصرية.</p>
+    </header>
+
+    <nav class="api-nav" style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 4rem; justify-content: center;">
+        <a href="#system" class="btn-ritual" style="font-size: 0.8rem; padding: 0.5rem 1.5rem;">النظام</a>
+        <a href="#stats" class="btn-ritual" style="font-size: 0.8rem; padding: 0.5rem 1.5rem;">الإحصائيات</a>
+        <a href="#content" class="btn-ritual" style="font-size: 0.8rem; padding: 0.5rem 1.5rem;">المحتوى</a>
+        <a href="#lore" class="btn-ritual" style="font-size: 0.8rem; padding: 0.5rem 1.5rem;">اللور</a>
+        <a href="#themes" class="btn-ritual" style="font-size: 0.8rem; padding: 0.5rem 1.5rem;">الأنماط</a>
+    </nav>
+
+    <div class="api-docs-grid" style="display: flex; flex-direction: column; gap: 5rem;">
+        
+        <!-- Section: System -->
+        <section id="system">
+            <h2 style="font-family: 'Amiri'; color: var(--text-gold); border-bottom: 2px solid var(--border-runic); padding-bottom: 1rem; margin-bottom: 2rem;">1. النظام والصحة (System & Health)</h2>
+            <div style="display: grid; gap: 1.5rem;">
+                <% const systemEndpoints = [
+                    { path: "/api/v1/health", desc: "التحقق من حالة الخادم" },
+                    { path: "/api/v1/version", desc: "رقم النسخة الحالية" },
+                    { path: "/api/v1/uptime", desc: "مدة تشغيل النظام بالثواني" },
+                    { path: "/api/v1/system/status", desc: "تقرير استهلاك الذاكرة والبيئة" },
+                    { path: "/api/v1/dev/endpoints", desc: "قائمة نقاط الوصول المفعلة" }
+                ] %>
+                <% systemEndpoints.forEach(ep => { %>
+                    <div class="api-endpoint" style="background: var(--bg-tablet); padding: 1.5rem; border: 1px solid var(--border-runic); border-radius: 8px;">
+                        <code style="color: var(--text-gold); font-weight: bold;"><%= ep.path %></code>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;"><%= ep.desc %></p>
+                    </div>
+                <% }) %>
+            </div>
+        </section>
+
+        <!-- Section: Stats -->
+        <section id="stats">
+            <h2 style="font-family: 'Amiri'; color: #00f2ff; border-bottom: 2px solid rgba(0, 242, 255, 0.2); padding-bottom: 1rem; margin-bottom: 2rem;">2. الإحصائيات (Advanced Stats)</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                <% const statEndpoints = [
+                    { path: "/api/v1/stats", desc: "ملخص عام لكافة البيانات" },
+                    { path: "/api/v1/stats/episodes", desc: "توزيع الفصول على المواسم" },
+                    { path: "/api/v1/stats/keywords", desc: "إجمالي المصطلحات المسجلة" },
+                    { path: "/api/v1/stats/lore-density", desc: "كثافة المعلومات لكل فصل" },
+                    { path: "/api/v1/stats/read-time/:s/:id", desc: "وقت القراءة المقدر للفصل" }
+                ] %>
+                <% statEndpoints.forEach(ep => { %>
+                    <div class="api-endpoint" style="background: rgba(0, 242, 255, 0.03); padding: 1.5rem; border: 1px solid rgba(0, 242, 255, 0.1); border-radius: 8px;">
+                        <code style="color: #00f2ff;"><%= ep.path %></code>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;"><%= ep.desc %></p>
+                    </div>
+                <% }) %>
+            </div>
+        </section>
+
+        <!-- Section: Lore -->
+        <section id="lore">
+            <h2 style="font-family: 'Amiri'; color: var(--text-gold); border-bottom: 2px solid var(--border-runic); padding-bottom: 1rem; margin-bottom: 2rem;">3. تصنيفات اللور (Filtered Lore)</h2>
+            <div style="display: grid; gap: 1.5rem;">
+                <% const loreEndpoints = [
+                    { path: "/api/v1/keywords/characters", desc: "قائمة الشخصيات التاريخية فقط" },
+                    { path: "/api/v1/keywords/locations", desc: "قائمة الكواكب والمواقع والمجرات" },
+                    { path: "/api/v1/keywords/artifacts", desc: "قائمة الأسلحة والأدوات الأسطورية" },
+                    { path: "/api/v1/lore/dynasties", desc: "بيانات السلالات الثلاث الكبرى" },
+                    { path: "/api/v1/lore/galaxies", desc: "بيانات المجرات المكتشفة" },
+                    { path: "/api/v1/lore/hamun", desc: "فلسفة وتاريخ آل همون" },
+                    { path: "/api/v1/lore/fatuha", desc: "فلسفة وتاريخ آل فتوها" },
+                    { path: "/api/v1/lore/ententooth", desc: "فلسفة وتاريخ آل إنتنتوث" }
+                ] %>
+                <% loreEndpoints.forEach(ep => { %>
+                    <div class="api-endpoint" style="background: var(--bg-tablet); padding: 1.5rem; border: 1px solid var(--border-runic); border-radius: 8px;">
+                        <code style="color: var(--text-gold);"><%= ep.path %></code>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;"><%= ep.desc %></p>
+                    </div>
+                <% }) %>
+            </div>
+        </section>
+
+        <!-- Section: Themes -->
+        <section id="themes">
+            <h2 style="font-family: 'Amiri'; color: #ff5e00; border-bottom: 2px solid rgba(255, 94, 0, 0.2); padding-bottom: 1rem; margin-bottom: 2rem;">4. الأنماط والمؤثرات (Themes & VFX)</h2>
+            <div style="display: grid; gap: 1.5rem;">
+                <% const vfxEndpoints = [
+                    { path: "/api/v1/themes", desc: "قائمة الأنماط البصرية المتاحة" },
+                    { path: "/api/v1/themes/config/:id", desc: "إعدادات الألوان والمؤثرات لموسم" },
+                    { path: "/api/v1/audio/tracks", desc: "مسارات الخلفية الصوتية لكل فصل" },
+                    { path: "/api/v1/vfx/types", desc: "أنواع الجسيمات المتحركة المستخدمة" },
+                    { path: "/api/v1/pwa/manifest", desc: "بيانات تطبيق الويب التقدمي" }
+                ] %>
+                <% vfxEndpoints.forEach(ep => { %>
+                    <div class="api-endpoint" style="background: rgba(255, 94, 0, 0.03); padding: 1.5rem; border: 1px solid rgba(255, 94, 0, 0.1); border-radius: 8px;">
+                        <code style="color: #ff5e00;"><%= ep.path %></code>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;"><%= ep.desc %></p>
+                    </div>
+                <% }) %>
+            </div>
+        </section>
+
+    </div>
+
+    <div style="margin-top: 8rem; padding: 4rem; text-align: center; border: 1px dashed var(--text-gold); opacity: 0.5;">
+        <p style="font-family: 'Cairo'; color: var(--text-silver);">Total Active Endpoints: <span style="color: var(--text-gold); font-weight: bold;">50+</span></p>
+        <p style="font-size: 0.8rem; margin-top: 10px;">Nexus Core V6.0 - All Rights Reserved</p>
+    </div>
+</div>
+
+<%- include('layout_foot') %>

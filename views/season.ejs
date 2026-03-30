@@ -1,0 +1,21 @@
+<%- include('layout_head', { title: seasonName }) %>
+
+<div class="story-container">
+    <div class="story-header animate-fade">
+        <p style="color: var(--primary); letter-spacing: 2px; margin-bottom: 0.5rem;">الموسم الأول</p>
+        <h1><%= seasonName %></h1>
+    </div>
+
+    <div class="reader-box">
+        <div class="episode-list-detailed" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
+            <% episodes.forEach(ep => { %>
+                <a href="/season/<%= seasonId %>/episode/<%= ep.id %>" class="nav-item animate-fade" style="text-align: center; border: 1px solid var(--border); padding: 1.5rem;">
+                    <div style="color: var(--primary); font-size: 0.8rem; margin-bottom: 0.5rem;">الجزء <%= ep.id %></div>
+                    <div style="font-weight: bold; font-size: 1.1rem;"><%= ep.name.replace('الجزء ' + ep.id + ': ', '').replace('الجزء ' + ep.id, '') || 'بداية الرحمة' %></div>
+                </a>
+            <% }) %>
+        </div>
+    </div>
+</div>
+
+<%- include('layout_foot') %>

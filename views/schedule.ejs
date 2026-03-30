@@ -1,0 +1,37 @@
+<%- include('layout_head', { title: "جدول الإطلاقات الكوني - V5.5" }) %>
+
+<div class="story-container" style="max-width: 900px;">
+    <header class="story-header" style="margin-top: 4rem;">
+        <span class="meta">TEMPORAL LOGS</span>
+        <h1>جدول الإطلاقات الكوني</h1>
+        <p style="color: var(--text-muted);">تتبع مسار الزمن والمخطوطات عبر أطوار المجرة العَمّارية.</p>
+    </header>
+
+    <!-- Season 1 Schedule -->
+    <section style="margin-top: 4rem;">
+        <h2 style="font-family: 'Amiri'; color: var(--text-gold); border-bottom: 1px solid var(--border-runic); padding-bottom: 1rem; margin-bottom: 2rem;">الموسم الأول: صراع السلالات</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 1rem;">
+            <% Object.keys(schedule[1]).forEach(ep => { %>
+                <div style="background: var(--bg-tablet); border: 1px solid var(--border-runic); padding: 1rem; text-align: center; border-radius: 4px;">
+                    <div style="font-size: 0.7rem; color: var(--text-gold); margin-bottom: 5px;">جزء <%= ep %></div>
+                    <div style="font-size: 0.9rem; color: var(--text-silver);"><%= schedule[1][ep] %></div>
+                </div>
+            <% }) %>
+        </div>
+    </section>
+
+    <!-- Season 2 Schedule -->
+    <section style="margin-top: 6rem; margin-bottom: 6rem;">
+        <h2 style="font-family: 'Amiri'; color: #00f2ff; border-bottom: 1px solid rgba(0, 242, 255, 0.2); padding-bottom: 1rem; margin-bottom: 2rem;">الموسم الثاني: طوفان السُّبات</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem;">
+            <% Object.keys(schedule[2]).forEach(ep => { %>
+                <div style="background: rgba(0, 242, 255, 0.05); border: 1px solid rgba(0, 242, 255, 0.2); padding: 1.5rem; text-align: center; border-radius: 8px;">
+                    <div style="font-size: 0.8rem; color: #00f2ff; margin-bottom: 5px;">جزء <%= ep %></div>
+                    <div style="font-size: 1.1rem; color: #fff;"><%= schedule[2][ep] %></div>
+                </div>
+            <% }) %>
+        </div>
+    </section>
+</div>
+
+<%- include('layout_foot') %>

@@ -1,0 +1,18 @@
+<%- include('layout_head', { title: "المسرد الكوني الشامل - V2.5" }) %>
+
+<div class="story-header" style="margin-top: 4rem;">
+    <span class="meta">الحقيقة في الظلال</span>
+    <h1>المسرد الكوني الشامل</h1>
+    <p style="color: var(--text-muted); max-width: 800px; margin: 0 auto; line-height: 1.8;">استكشف الشخصيات والمواقع والأسرار التي تشكل عالم همون وفتوها. تذكر أن المعرفة سلاح، والجهل بداية السقوط.</p>
+</div>
+
+<div class="obsidian-grid">
+    <% Object.keys(keywords).sort().forEach(key => { %>
+        <div class="obsidian-card">
+            <h3><%= key %></h3>
+            <p style="line-height: 1.8; color: var(--text-silver);"><%= keywords[key] %></p>
+        </div>
+    <% }) %>
+</div>
+
+<%- include('layout_foot') %>

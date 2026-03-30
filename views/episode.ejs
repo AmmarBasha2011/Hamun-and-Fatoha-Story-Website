@@ -1,0 +1,27 @@
+<%- include('layout_head') %>
+
+<div class="story-header">
+    <span class="meta">المخطوطة <%= episode.id %> - سجل الخلود</span>
+    <h1><%= episode.name %></h1>
+    <div style="margin-top: 10px; font-size: 0.9rem; color: var(--text-muted);">تاريخ الإصدار: <span style="color: var(--text-gold);"><%= episode.releaseDate %></span></div>
+</div>
+
+<article class="reader-tablet">
+    <div class="story-text">
+        <%- content.replace(/\n/g, '<br>') %>
+    </div>
+    
+    <nav class="ritual-nav">
+        <% if (prevId) { %>
+            <a href="/season/<%= seasonId %>/episode/<%= prevId %>" class="btn-ritual">العودة للماضي</a>
+        <% } else { %>
+            <div></div>
+        <% } %>
+        
+        <% if (nextId) { %>
+            <a href="/season/<%= seasonId %>/episode/<%= nextId %>" class="btn-ritual">استكشاف المجهول</a>
+        <% } %>
+    </nav>
+</article>
+
+<%- include('layout_foot') %>
