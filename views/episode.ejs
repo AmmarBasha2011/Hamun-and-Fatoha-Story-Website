@@ -1,27 +1,35 @@
 <%- include('layout_head') %>
 
-<div class="story-header">
-    <span class="meta">المخطوطة <%= episode.id %> - سجل الخلود</span>
-    <h1><%= episode.name %></h1>
-    <div style="margin-top: 10px; font-size: 0.9rem; color: var(--text-muted);">تاريخ الإصدار: <span style="color: var(--text-gold);"><%= episode.releaseDate %></span></div>
-</div>
+<div class="v7-container v7-animate-entry" style="padding-top: 3rem;">
+    <header style="text-align: center; margin-bottom: 3rem;">
+        <span class="cairo" style="color: var(--text-secondary); letter-spacing: 2px;">المخطوطة <%= episode.id %></span>
+        <h1 style="font-size: 3rem; margin: 1rem 0;"><%= episode.name %></h1>
+        <div class="cairo" style="font-size: 0.8rem; color: var(--text-muted);">تاريخ التوثيق: <span style="color: var(--accent-gold);"><%= episode.releaseDate %></span></div>
+    </header>
 
-<article class="reader-tablet">
-    <div class="story-text">
-        <%- content.replace(/\n/g, '<br>') %>
+    <!-- Feature 7: Auto-Scroll Controls -->
+    <div class="v7-auto-scroll-ctrl glass-card" style="padding: 0.5rem; flex-direction: row;">
+        <button class="btn-v7" style="padding: 0.5rem;" onclick="v7ToggleAutoScroll(1)">▶️</button>
+        <button class="btn-v7" style="padding: 0.5rem;" onclick="v7AddBookmark()">🔖</button>
     </div>
-    
-    <nav class="ritual-nav">
-        <% if (prevId) { %>
-            <a href="/season/<%= seasonId %>/episode/<%= prevId %>" class="btn-ritual">العودة للماضي</a>
-        <% } else { %>
-            <div></div>
-        <% } %>
+
+    <article class="v7-reader">
+        <div class="story-text">
+            <%- content.replace(/\n/g, '<br>') %>
+        </div>
         
-        <% if (nextId) { %>
-            <a href="/season/<%= seasonId %>/episode/<%= nextId %>" class="btn-ritual">استكشاف المجهول</a>
-        <% } %>
-    </nav>
-</article>
+        <nav style="display: flex; justify-content: space-between; margin-top: 4rem; gap: 1rem;">
+            <% if (prevId) { %>
+                <a href="/season/<%= seasonId %>/episode/<%= prevId %>" class="btn-v7" style="flex: 1;">⬅️ العودة للماضي</a>
+            <% } else { %>
+                <div style="flex: 1;"></div>
+            <% } %>
+
+            <% if (nextId) { %>
+                <a href="/season/<%= seasonId %>/episode/<%= nextId %>" class="btn-v7" style="flex: 1;">استكشاف المجهول ➡️</a>
+            <% } %>
+        </nav>
+    </article>
+</div>
 
 <%- include('layout_foot') %>
