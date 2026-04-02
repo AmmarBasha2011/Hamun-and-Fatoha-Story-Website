@@ -3,180 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#050505">
+    <meta name="theme-color" content="#020205">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="/manifest.json">
-    <title><%= typeof title !== 'undefined' ? title : 'همون وفتوها - Nocturnal Archive' %></title>
+    <title><%= typeof title !== 'undefined' ? title : 'همون وفتوها - V7' %></title>
     <link rel="stylesheet" href="/css/style.css">
-</head>
-<body class="<%= (typeof seasonId !== 'undefined' && seasonId == 2) ? 'season-2' : '' %>">
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW failed', err));
-            });
-        }
+        // Apply saved theme immediately to prevent flash
+        const savedTheme = localStorage.getItem('v7_theme') || 'ancient';
+        if(savedTheme !== 'ancient') document.documentElement.classList.add('theme-' + savedTheme);
     </script>
-    <!-- Soul Line (Progress) -->
-    <div class="soul-line" id="soulLine"></div>
+</head>
+<body class="v7-body">
+    <div id="v7-vfx-canvas" style="position: fixed; inset: 0; pointer-events: none; z-index: 0;"></div>
 
-    <!-- Background VFX Layer -->
-    <div id="vfx-layer" class="vfx-container"></div>
-
-    <!-- Mystical Talisman (Menu Toggle) -->
-    <div class="talisman" id="talismanToggle" aria-label="Open Grimoire">
-        <div class="talisman-icon"></div>
-    </div>
-
-    <!-- Audio Player (Soul-Sync) -->
-    <div class="audio-control" id="audioToggle">
-        <span id="audio-status">🔈</span>
-        <audio id="ambient-audio" loop></audio>
-    </div>
-
-    <!-- The Grimoire (Full-screen Overlay Menu) -->
-    <div class="grimoire" id="grimoire">
-        <h2 style="font-family: 'Amiri', serif; color: var(--text-gold); font-size: 3rem; margin-bottom: 1rem;">السجل الموحد</h2>
-        
-        <div style="display: flex; gap: 2rem; margin-bottom: 2rem;">
-            <a href="/" style="color: var(--text-silver); text-decoration: none; font-family: 'Cairo';">الرئيسية</a>
-            <a href="/keywords" style="color: var(--text-silver); text-decoration: none; font-family: 'Cairo';">المسرد</a>
-            <a href="/schedule" style="color: var(--text-gold); text-decoration: none; font-family: 'Cairo';">جدول الإصدارات</a>
-            <a href="/api-docs" style="color: var(--text-silver); text-decoration: none; font-family: 'Cairo';">API</a>
+    <!-- V7 Top Bar -->
+    <header class="v7-top-bar" style="position: sticky; top: 0; z-index: 4000; background: var(--bg-glass); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-glass); padding: 1rem;">
+        <div class="v7-container" style="display: flex; justify-content: space-between; align-items: center;">
+            <a href="/" style="font-family: 'Amiri'; font-size: 1.5rem; color: var(--accent-gold); text-decoration: none; font-weight: bold;">المجرّة العَمّارية</a>
+            <div id="v7-date-display" class="cairo" style="font-size: 0.8rem; color: var(--text-secondary);"><%= typeof currentDate !== 'undefined' ? currentDate : '' %></div>
         </div>
+    </header>
 
-        <!-- Oracle Search Bar -->
-        <div class="oracle-search">
-            <input type="text" id="oracleInput" placeholder="ابحث في التاريخ أو المصطلحات..." autocomplete="off">
-            <div id="searchResults" class="search-results"></div>
-        </div>
-
-        <div class="grimoire-grid" id="grimoireGrid">
-            <% if (typeof allEpisodes !== 'undefined') { %>
-                <% allEpisodes.forEach(ep => { %>
-                    <a href="/season/<%= typeof seasonId !== 'undefined' ? seasonId : 1 %>/episode/<%= ep.id %>" class="chapter-link <%= (typeof currentEpisodeId !== 'undefined' && currentEpisodeId == ep.id) ? 'active' : '' %>">
-                        <%= ep.name %>
-                    </a>
-                <% }) %>
-            <% } %>
-        </div>
-        <button id="closeGrimoire" style="margin-top: 2rem; background: transparent; border: 1px solid var(--text-gold); color: var(--text-gold); padding: 1rem 2rem; cursor: pointer; font-family: 'Cairo', sans-serif;">العودة للمخطوطة</button>
-    </div>
-
-    <div class="main-wrapper">
-        <nav class="top-bar">
-            <a href="/" class="logo">همون وفتوها</a>
-            <div style="position: absolute; left: 4rem; display: flex; gap: 2rem;" class="nav-links-desktop">
-                <a href="/" style="color: var(--text-silver); text-decoration: none; font-family: 'Cairo';">الرئيسية</a>
-                <a href="/keywords" style="color: var(--text-silver); text-decoration: none; font-family: 'Cairo';">المسرد</a>
-                <a href="/schedule" style="color: var(--text-silver); text-decoration: none; font-family: 'Cairo';">الجدول</a>
-                <a href="/api-docs" style="color: var(--text-silver); text-decoration: none; font-family: 'Cairo';">API</a>
-            </div>
-        </nav>
-        <main class="content-area">
-
-<script>
-    const talisman = document.getElementById('talismanToggle');
-    const grimoire = document.getElementById('grimoire');
-    const closeGrimoire = document.getElementById('closeGrimoire');
-    const soulLine = document.getElementById('soulLine');
-    const audioToggle = document.getElementById('audioToggle');
-    const audio = document.getElementById('ambient-audio');
-    const oracleInput = document.getElementById('oracleInput');
-    const searchResults = document.getElementById('searchResults');
-    const grimoireGrid = document.getElementById('grimoireGrid');
-    const vfxLayer = document.getElementById('vfx-layer');
-
-    const seasonId = <%= typeof seasonId !== 'undefined' ? seasonId : 1 %>;
-
-    // 1. Immersive Audio Logic
-    const audioTracks = {
-        1: 'https://www.soundjay.com/nature/wind-01.mp3', // Ancient Wind
-        2: 'https://www.soundjay.com/free-music/deep-space-01.mp3' // Space Hum (placeholder URL)
-    };
-    audio.src = audioTracks[seasonId] || audioTracks[1];
-
-    audioToggle.addEventListener('click', () => {
-        if (audio.paused) {
-            audio.play();
-            document.getElementById('audio-status').innerText = '🔊';
-            audioToggle.classList.add('playing');
-        } else {
-            audio.pause();
-            document.getElementById('audio-status').innerText = '🔈';
-            audioToggle.classList.remove('playing');
-        }
-    });
-
-    // 2. Oracle Search Indexing
-    let searchIndex = [];
-    fetch('/api/search-index').then(r => r.json()).then(data => searchIndex = data);
-
-    oracleInput.addEventListener('input', (e) => {
-        const val = e.target.value.toLowerCase();
-        if (val.length < 2) {
-            searchResults.style.display = 'none';
-            grimoireGrid.style.opacity = '1';
-            return;
-        }
-
-        const matches = searchIndex.filter(item => 
-            item.name.toLowerCase().includes(val) || 
-            (item.desc && item.desc.toLowerCase().includes(val))
-        ).slice(0, 10);
-
-        if (matches.length > 0) {
-            grimoireGrid.style.opacity = '0.1';
-            searchResults.style.display = 'block';
-            searchResults.innerHTML = matches.map(m => `
-                <a href="${m.type === 'episode' ? `/season/${m.season}/episode/${m.id}` : '/keywords'}" class="search-item">
-                    <span class="type">${m.type === 'episode' ? 'فصل' : 'مصطلح'}</span>
-                    <span class="name">${m.name}</span>
-                    ${m.season ? `<span class="season">موسم ${m.season}</span>` : ''}
-                </a>
-            `).join('');
-        }
-    });
-
-    // 3. The Chronometer (Progress Tracking)
-    if (window.location.pathname.includes('/episode/')) {
-        const episodeId = <%= typeof currentEpisodeId !== 'undefined' ? currentEpisodeId : 0 %>;
-        if (episodeId > 0) {
-            localStorage.setItem(`progress_s${seasonId}`, episodeId);
-        }
-    }
-
-    talisman.addEventListener('click', () => grimoire.classList.add('open'));
-    closeGrimoire.addEventListener('click', () => grimoire.classList.remove('open'));
-
-    // 4. Progress Line
-    window.addEventListener('scroll', () => {
-        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        const scrolled = (winScroll / height) * 100;
-        soulLine.style.width = scrolled + "%";
-    });
-
-    // 5. Dynamic Visual FX
-    if (seasonId == 1) {
-        for(let i=0; i<30; i++) {
-            const ember = document.createElement('div');
-            ember.className = 'ember';
-            ember.style.left = Math.random() * 100 + 'vw';
-            ember.style.animationDuration = (Math.random() * 5 + 5) + 's';
-            ember.style.animationDelay = Math.random() * 10 + 's';
-            vfxLayer.appendChild(ember);
-        }
-    } else {
-        for(let i=0; i<50; i++) {
-            const star = document.createElement('div');
-            star.className = 'star-streak';
-            star.style.left = Math.random() * 100 + 'vw';
-            star.style.top = Math.random() * 100 + 'vh';
-            star.style.animationDuration = (Math.random() * 2 + 1) + 's';
-            star.style.animationDelay = Math.random() * 5 + 's';
-            vfxLayer.appendChild(star);
-        }
-    }
-</script>
+    <main class="v7-main-content v7-animate-entry">

@@ -28,21 +28,28 @@ const sortedKeywordKeys = Object.keys(rawKeywords).sort((a, b) => b.length - a.l
 // Load Release Schedule
 const scheduleData = fs.readFileSync(path.join(rootDir, 'data', 'videosrealses.txt'), 'utf8');
 const releaseSchedule = { 1: {}, 2: {} };
-let currentSeason = 0;
+let currentSeasonIdx = 0;
 scheduleData.split('\n').forEach(line => {
-    if (line.includes('SEASON 1')) currentSeason = 1;
-    else if (line.includes('SEASON 2')) currentSeason = 2;
+    if (line.includes('SEASON 1')) currentSeasonIdx = 1;
+    else if (line.includes('SEASON 2')) currentSeasonIdx = 2;
     const match = line.match(/Ep\s+(\d+)(?:\s+\(Part\s+(\d+)\))?:\s+([\d\/]+)/);
-    if (match && currentSeason) {
+    if (match && currentSeasonIdx) {
         const epNum = match[1];
         const part = match[2];
         const date = match[3];
         const key = part ? `${epNum}.${part}` : epNum;
-        releaseSchedule[currentSeason][key] = date;
+        releaseSchedule[currentSeasonIdx][key] = date;
     }
 });
 
-function getEpisodes(season) {
+function isReleased(dateStr) {
+    if (!dateStr || dateStr === 'TBA') return false;
+    const [day, month, year] = dateStr.split('/').map(Number);
+    const releaseDate = new Date(year, month - 1, day);
+    return new Date() >= releaseDate;
+}
+
+function getEpisodes(season, includeAll = false) {
     const dir = path.join(rootDir, 'data', `season${season}`);
     if (!fs.existsSync(dir)) return [];
     const files = fs.readdirSync(dir).filter(f => f.endsWith('.txt'));
@@ -61,15 +68,17 @@ function getEpisodes(season) {
             id: id,
             name: file.replace('.txt', ''),
             file: file,
-            releaseDate: releaseDate
+            releaseDate: releaseDate,
+            isReleased: isReleased(releaseDate)
         };
-    }).sort((a, b) => a.id - b.id);
+    }).filter(ep => includeAll || ep.isReleased).sort((a, b) => a.id - b.id);
 }
 
 router.get('/', (req, res) => {
     const episodes = getEpisodes(1);
     res.render('index', { 
-        title: "قصة همون وفتوها - V5.5",
+        title: "قصة همون وفتوها - V7.0",
+        currentDate: new Date().toLocaleDateString('ar-EG', { day: 'numeric', month: 'long', year: 'numeric' }),
         seasons: [
             { id: 1, name: "صراع السلالات: فجر المجرة العَمّارية", count: 50, cover: "/covers/season1.jpg", start: "3/1/2026", end: "10/5/2026" },
             { id: 2, name: "المجرة العَمّارية: طوفان السُّبات", count: 30, cover: "/covers/season2.jpg", start: "9/9/2026", end: "31/3/2027" }
@@ -77,6 +86,14 @@ router.get('/', (req, res) => {
         allEpisodes: episodes,
         seasonId: 1
     });
+});
+
+router.get('/timeline', (req, res) => {
+    res.render('timeline', { title: "الخط الزمني للمجرّة" });
+});
+
+router.get('/settings', (req, res) => {
+    res.render('settings', { title: "إعدادات المجرّة" });
 });
 
 router.get('/schedule', (req, res) => {
@@ -90,7 +107,7 @@ router.get('/schedule', (req, res) => {
 
 
 router.get('/season/:id', (req, res) => {
-    const episodes = getEpisodes(req.params.id);
+    const episodes = getEpisodes(req.params.id); // Only released
     const seasonNames = {
         1: "صراع السلالات: فجر المجرة العَمّارية",
         2: "المجرة العَمّارية: طوفان السُّبات"
@@ -114,10 +131,12 @@ router.get('/keywords', (req, res) => {
 });
 
 router.get('/season/:seasonId/episode/:episodeId', (req, res) => {
-    const episodes = getEpisodes(req.params.seasonId);
+    const episodes = getEpisodes(req.params.seasonId, true); // Include unreleased for checking
     const episode = episodes.find(e => e.id == req.params.episodeId);
-    if (!episode) return res.status(404).send('Episode not found');
     
+    if (!episode) return res.status(404).send('Episode not found');
+    if (!episode.isReleased) return res.status(403).send('هذا الفصل لم يصدر بعد. كن صبوراً أيها المسافر.');
+
     let content = fs.readFileSync(path.join(rootDir, 'data', `season${req.params.seasonId}`, episode.file), 'utf8');
     
     // Efficiently replace keywords using sorted keys to avoid nested replacement issues
@@ -155,9 +174,10 @@ router.get('/api/seasons/:id/episodes', (req, res) => {
 });
 
 router.get('/api/seasons/:id/episodes/:epId', (req, res) => {
-    const episodes = getEpisodes(req.params.id);
+    const episodes = getEpisodes(req.params.id, true);
     const episode = episodes.find(e => e.id == req.params.epId);
     if (!episode) return res.status(404).json({ error: "Episode not found" });
+    if (!episode.isReleased) return res.status(403).json({ error: "Not released yet" });
     
     const content = fs.readFileSync(path.join(rootDir, 'data', `season${req.params.id}`, episode.file), 'utf8');
     res.json({
@@ -316,6 +336,90 @@ router.get('/api/v1/search/total', (req, res) => {
 // 10. Advanced Stats
 router.get('/api/v1/stats/read-time/:season/:id', (req, res) => res.json({ est_minutes: 8, word_count: 1200 }));
 router.get('/api/v1/system/logs', (req, res) => res.json({ message: "All archives secure.", access: "Granted" }));
+
+// --- V7.0 CORE NEXUS API ---
+
+function getHypeLine() {
+    const now = new Date();
+    const s1End = new Date(2026, 4, 10); // 10/5/2026
+    const s2Start = new Date(2026, 8, 9); // 9/9/2026
+    const s2LastWeek = new Date(2026, 8, 2); // 2/9/2026
+
+    // Fallback lines in case of errors
+    const fallbacks = [
+        "القدر ينسج خيوطه في صمت المجرة.",
+        "الماضي لا يموت، بل ينتظر اللحظة المناسبة للنهوض.",
+        "في قلب كل ثقب أسود، تكمن حقيقة سلالة منسية."
+    ];
+
+    try {
+        if (now < s1End) {
+            // During S1, send line from S1
+            const eps = getEpisodes(1, true);
+            const latestReleased = eps.filter(e => e.isReleased).pop();
+            const content = fs.readFileSync(path.join(rootDir, 'data', 'season1', latestReleased.file), 'utf8');
+            const lines = content.split('\n').filter(l => l.length > 50);
+            return lines[Math.floor(Math.random() * lines.length)] || fallbacks[0];
+        } else if (now >= s1End && now < s2LastWeek) {
+            // Gap between S1 and S2: lines from S1
+            const eps = getEpisodes(1, true);
+            const randomEp = eps[Math.floor(Math.random() * eps.length)];
+            const content = fs.readFileSync(path.join(rootDir, 'data', 'season1', randomEp.file), 'utf8');
+            const lines = content.split('\n').filter(l => l.length > 50);
+            return "من سجلات الماضي: " + (lines[Math.floor(Math.random() * lines.length)] || fallbacks[1]);
+        } else if (now >= s2LastWeek && now < s2Start) {
+            // Week before S2: lines from S2 Ep 1
+            const content = fs.readFileSync(path.join(rootDir, 'data', 'season2', 'الجزء الأول.txt'), 'utf8');
+            const lines = content.split('\n').filter(l => l.length > 50);
+            return "قريباً في الموسم الثاني: " + (lines[Math.floor(Math.random() * lines.length)] || fallbacks[2]);
+        } else {
+            // S2 and beyond
+            const s2Eps = getEpisodes(2, true);
+            const nextEp = s2Eps.find(e => !e.isReleased);
+            if (nextEp) {
+                const content = fs.readFileSync(path.join(rootDir, 'data', 'season2', nextEp.file), 'utf8');
+                const lines = content.split('\n').filter(l => l.length > 40);
+                return "من الفصل القادم: " + (lines[0] || lines[1] || fallbacks[0]);
+            } else {
+                // S2 finished, send from all seasons
+                const s1 = getEpisodes(1, true);
+                const s2 = getEpisodes(2, true);
+                const all = [...s1.map(e => ({...e, s: 1})), ...s2.map(e => ({...e, s: 2}))];
+                const rand = all[Math.floor(Math.random() * all.length)];
+                const content = fs.readFileSync(path.join(rootDir, 'data', `season${rand.s}`, rand.file), 'utf8');
+                const lines = content.split('\n').filter(l => l.length > 50);
+                return "تذكر رحلتنا: " + (lines[Math.floor(Math.random() * lines.length)] || fallbacks[1]);
+            }
+        }
+    } catch (e) {
+        return fallbacks[0];
+    }
+}
+
+router.get('/api/v7/hype', (req, res) => {
+    res.json({ line: getHypeLine() });
+});
+
+router.get('/api/v7/stats', (req, res) => {
+    const s1 = getEpisodes(1, true);
+    const s2 = getEpisodes(2, true);
+    res.json({
+        system_time: new Date(),
+        total_released: s1.filter(e => e.isReleased).length + s2.filter(e => e.isReleased).length,
+        total_content: s1.length + s2.length,
+        next_release: [...s1, ...s2].find(e => !e.isReleased)?.releaseDate || "TBA"
+    });
+});
+
+router.get('/api/v7/settings/defaults', (req, res) => {
+    res.json({
+        theme: "ancient",
+        notifications: true,
+        ambient_vol: 0.5,
+        episode_vol: 0.8,
+        auto_scroll_speed: 1
+    });
+});
 
 app.use('/.netlify/functions/server', router);
 app.use('/', router);

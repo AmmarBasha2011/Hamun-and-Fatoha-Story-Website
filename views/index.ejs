@@ -1,14 +1,14 @@
 <%- include('layout_head', { title: "همون وفتوها - السجل المظلم" }) %>
 
-<div style="text-align: center; padding: 4rem 1rem;">
-    <h1 style="font-family: 'Amiri', serif; font-size: 3.5rem; color: var(--text-gold); margin-bottom: 1rem; text-shadow: 0 0 20px var(--accent-glow);">همون وفتوها</h1>
-    <p style="font-size: 1.1rem; color: var(--text-silver); max-width: 600px; margin: 0 auto 1.5rem; line-height: 1.6; opacity: 0.8;">سجل السلالات المفقودة في أعماق المجرة العَمّارية</p>
+<div class="v7-container" style="text-align: center; padding: 4rem 1rem;">
+    <h1 style="font-size: 4rem; margin-bottom: 1rem;">ملحمة همون وفتوها</h1>
+    <p class="cairo" style="font-size: 1.2rem; color: var(--text-secondary); max-width: 700px; margin: 0 auto 2rem; line-height: 1.6;">بوابة السلالات المفقودة في أعماق المجرّة العَمّارية - الإصدار السابع</p>
     
     <!-- Resume Reading Widget -->
-    <div id="resumeWidget" style="display: none; margin-bottom: 3rem;">
-        <div style="background: rgba(212, 175, 55, 0.1); border: 1px dashed var(--text-gold); padding: 1.5rem; display: inline-block; border-radius: 12px;">
-            <p style="color: var(--text-silver); margin-bottom: 1rem; font-size: 0.9rem;">هل تود إكمال القراءة من حيث توقفت؟</p>
-            <a id="resumeLink" href="#" class="btn-ritual" style="padding: 0.5rem 1.5rem; font-size: 1rem;">استكمال القراءة</a>
+    <div id="resumeWidget" style="display: none; margin-bottom: 4rem;">
+        <div class="glass-card" style="display: inline-block; padding: 2rem;">
+            <p class="cairo" style="color: var(--text-primary); margin-bottom: 1.5rem;">أهلاً بك مجدداً أيها المسافر. هل تود العودة لآخر نقطة؟</p>
+            <a id="resumeLink" href="#" class="btn-v7" style="padding: 1rem 2.5rem;">استئناف الرحلة</a>
         </div>
     </div>
 
@@ -30,24 +30,24 @@
     </script>
     
     <% if (seasons && seasons.length > 0) { %>
-        <div class="season-portal" style="display: flex; flex-direction: column; gap: 2rem; align-items: center; padding: 0 1rem;">
+        <div class="mobile-first-grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
             <% seasons.forEach(season => { %>
-                <div class="season-card-v35" style="width: 100%; max-width: 400px; background: var(--bg-tablet); border-radius: 12px; overflow: hidden; border: 1px solid <%= season.id == 2 ? '#00f2ff' : 'var(--text-gold)' %>; box-shadow: var(--shadow-deep); transition: var(--t-ritual);">
-                    <div class="cover-container" style="position: relative; height: 250px; overflow: hidden;">
-                        <img src="<%= season.cover %>" alt="<%= season.name %>" style="width: 100%; height: 100%; object-fit: cover; transition: 0.5s;">
-                        <div style="position: absolute; inset: 0; background: linear-gradient(to top, var(--bg-tablet), transparent);"></div>
-                        <div style="position: absolute; bottom: 15px; right: 20px;">
-                            <span style="background: <%= season.id == 2 ? '#00f2ff' : 'var(--text-gold)' %>; color: #000; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.8rem;">
+                <div class="glass-card" style="padding: 0; overflow: hidden; border-color: <%= season.id == 2 ? 'var(--accent-neon)' : 'var(--accent-gold)' %>;">
+                    <div style="position: relative; height: 200px;">
+                        <img src="<%= season.cover %>" alt="<%= season.name %>" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.6;">
+                        <div style="position: absolute; inset: 0; background: linear-gradient(transparent, var(--bg-main));"></div>
+                        <div style="position: absolute; bottom: 10px; right: 20px;">
+                            <span class="cairo" style="background: <%= season.id == 2 ? 'var(--accent-neon)' : 'var(--accent-gold)' %>; color: #000; padding: 2px 15px; border-radius: 20px; font-weight: bold; font-size: 0.8rem;">
                                 <%= season.count %> جزء
                             </span>
                         </div>
                     </div>
-                    <div style="padding: 1.5rem; text-align: right;">
-                        <h2 style="font-family: 'Amiri', serif; color: <%= season.id == 2 ? '#00f2ff' : 'var(--text-gold)' %>; font-size: 1.6rem; margin-bottom: 0.5rem;"><%= season.name %></h2>
-                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.4;">
+                    <div style="padding: 2rem; text-align: right;">
+                        <h2 style="color: <%= season.id == 2 ? 'var(--accent-neon)' : 'var(--accent-gold)' %>; margin-bottom: 1rem;"><%= season.name %></h2>
+                        <p class="cairo" style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 2rem;">
                             <%= season.id == 2 ? 'طوفان السُّبات العظيم يهدد بقاء المجرة.' : 'رحلة البحث عن الميثاق وبداية الصراع الأزلي.' %>
                         </p>
-                        <a href="/season/<%= season.id %>/episode/1" class="btn-ritual" style="display: block; width: 100%; text-align: center; border-radius: 8px; border-color: <%= season.id == 2 ? '#00f2ff' : 'var(--text-gold)' %>; color: <%= season.id == 2 ? '#00f2ff' : 'var(--text-gold)' %>;">بدء القراءة</a>
+                        <a href="/season/<%= season.id %>" class="btn-v7" style="display: block; border-color: <%= season.id == 2 ? 'var(--accent-neon)' : 'var(--accent-gold)' %>; color: <%= season.id == 2 ? 'var(--accent-neon)' : 'var(--accent-gold)' %>;">دخول السجل</a>
                     </div>
                 </div>
             <% }) %>
@@ -55,18 +55,18 @@
     <% } %>
 </div>
 
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 4rem; padding: 6rem 2rem; max-width: 1200px; margin: 0 auto;">
-    <div style="text-align: center; border-bottom: 1px solid var(--border-runic); padding-bottom: 2rem;">
-        <h3 style="font-family: 'Amiri', serif; color: var(--text-gold); font-size: 1.8rem; margin-bottom: 1rem;">أرشيف أبدي</h3>
-        <p style="color: var(--text-muted);">كلماتٌ لا تُمحى، سُطرت في قلب الفراغ لتشهد على عظمة السلالات.</p>
+<div class="v7-container mobile-first-grid" style="padding: 8rem 1rem; border-top: 1px solid var(--border-glass);">
+    <div style="text-align: center;">
+        <h3 style="font-size: 2rem; margin-bottom: 1rem;">🌌 أرشيف أبدي</h3>
+        <p class="cairo" style="color: var(--text-secondary);">كلماتٌ لا تُمحى، سُطرت في قلب الفراغ لتشهد على عظمة السلالات.</p>
     </div>
-    <div style="text-align: center; border-bottom: 1px solid var(--border-runic); padding-bottom: 2rem;">
-        <h3 style="font-family: 'Amiri', serif; color: var(--text-gold); font-size: 1.8rem; margin-bottom: 1rem;">لغة النجوم</h3>
-        <p style="color: var(--text-muted);">نظام مسرد ذكي يفك شفرات التاريخ بلمسة واحدة.</p>
+    <div style="text-align: center;">
+        <h3 style="font-size: 2rem; margin-bottom: 1rem;">🧠 لغة النجوم</h3>
+        <p class="cairo" style="color: var(--text-secondary);">نظام مسرد ذكي يفك شفرات التاريخ بلمسة واحدة.</p>
     </div>
-    <div style="text-align: center; border-bottom: 1px solid var(--border-runic); padding-bottom: 2rem;">
-        <h3 style="font-family: 'Amiri', serif; color: var(--text-gold); font-size: 1.8rem; margin-bottom: 1rem;">تركيز مطلق</h3>
-        <p style="color: var(--text-muted);">تصميم يقدس القراءة ويمنحك السكينة في حضرة الكلمات.</p>
+    <div style="text-align: center;">
+        <h3 style="font-size: 2rem; margin-bottom: 1rem;">✨ تركيز مطلق</h3>
+        <p class="cairo" style="color: var(--text-secondary);">تصميم يقدس القراءة ويمنحك السكينة في حضرة الكلمات.</p>
     </div>
 </div>
 

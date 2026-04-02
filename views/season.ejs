@@ -1,20 +1,19 @@
 <%- include('layout_head', { title: seasonName }) %>
 
-<div class="story-container">
-    <div class="story-header animate-fade">
-        <p style="color: var(--primary); letter-spacing: 2px; margin-bottom: 0.5rem;">الموسم الأول</p>
-        <h1><%= seasonName %></h1>
-    </div>
+<div class="v7-container v7-animate-entry" style="padding-top: 4rem;">
+    <header style="text-align: center; margin-bottom: 5rem;">
+        <p class="cairo" style="color: var(--text-secondary); letter-spacing: 4px; margin-bottom: 1rem;">أرشيف الموسم <%= seasonId %></p>
+        <h1 style="font-size: 3.5rem;"><%= seasonName %></h1>
+    </header>
 
-    <div class="reader-box">
-        <div class="episode-list-detailed" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
-            <% episodes.forEach(ep => { %>
-                <a href="/season/<%= seasonId %>/episode/<%= ep.id %>" class="nav-item animate-fade" style="text-align: center; border: 1px solid var(--border); padding: 1.5rem;">
-                    <div style="color: var(--primary); font-size: 0.8rem; margin-bottom: 0.5rem;">الجزء <%= ep.id %></div>
-                    <div style="font-weight: bold; font-size: 1.1rem;"><%= ep.name.replace('الجزء ' + ep.id + ': ', '').replace('الجزء ' + ep.id, '') || 'بداية الرحمة' %></div>
-                </a>
-            <% }) %>
-        </div>
+    <div class="mobile-first-grid" style="grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));">
+        <% episodes.forEach(ep => { %>
+            <a href="/season/<%= seasonId %>/episode/<%= ep.id %>" class="glass-card" style="text-decoration: none; text-align: center; padding: 2.5rem;">
+                <div class="cairo" style="color: var(--accent-gold); font-size: 0.8rem; margin-bottom: 1rem; font-weight: bold;">المخطوطة <%= ep.id %></div>
+                <div style="font-weight: bold; font-size: 1.3rem; color: var(--text-primary);"><%= ep.name.replace('الجزء ' + ep.id + ': ', '').replace('الجزء ' + ep.id, '') || 'بداية الحكاية' %></div>
+                <div class="cairo" style="font-size: 0.7rem; color: var(--text-muted); margin-top: 1.5rem;">تم الإصدار: <%= ep.releaseDate %></div>
+            </a>
+        <% }) %>
     </div>
 </div>
 

@@ -6,13 +6,21 @@
     <p style="color: var(--text-muted); max-width: 800px; margin: 0 auto; line-height: 1.8;">استكشف الشخصيات والمواقع والأسرار التي تشكل عالم همون وفتوها. تذكر أن المعرفة سلاح، والجهل بداية السقوط.</p>
 </div>
 
-<div class="obsidian-grid">
-    <% Object.keys(keywords).sort().forEach(key => { %>
-        <div class="obsidian-card">
-            <h3><%= key %></h3>
-            <p style="line-height: 1.8; color: var(--text-silver);"><%= keywords[key] %></p>
-        </div>
-    <% }) %>
+<div class="v7-container">
+    <div class="mobile-first-grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
+        <% Object.keys(keywords).sort().forEach(key => { %>
+            <div class="glass-card v7-animate-entry">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                    <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--accent-gold-glow); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                        <%= key.includes('آل') || key.length < 6 ? '👤' : '🗺️' %>
+                    </div>
+                    <h3 style="margin: 0; font-size: 1.4rem;"><%= key %></h3>
+                </div>
+                <p class="cairo" style="font-size: 0.95rem; color: var(--text-secondary);"><%= keywords[key] %></p>
+                <button class="btn-v7" style="margin-top: 1rem; padding: 0.4rem 1rem; font-size: 0.8rem;" onclick="navigator.clipboard.writeText('<%= key %>: <%= keywords[key] %>'); alert('تم النسخ للسجل الشخصي')">نسخ المعلومات</button>
+            </div>
+        <% }) %>
+    </div>
 </div>
 
 <%- include('layout_foot') %>
