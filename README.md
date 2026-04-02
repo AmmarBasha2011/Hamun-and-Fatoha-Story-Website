@@ -1,7 +1,7 @@
-# 🌌 Hamun & Fatuha Saga: The Ammari Nexus (V5.5 / API V6.0)
+# 🌌 Hamun & Fatuha Saga: The Ammari Nexus (V7 / API V6.0)
 
 [![Status: Immortal](https://img.shields.io/badge/Status-Immortal-gold?style=for-the-badge&logo=probot)](/)
-[![Version: 5.5](https://img.shields.io/badge/Web_Version-5.5-cyan?style=for-the-badge)](/)
+[![Version: 7](https://img.shields.io/badge/Web_Version-7-cyan?style=for-the-badge)](/)
 [![API: 6.0](https://img.shields.io/badge/API_Version-6.0-blueviolet?style=for-the-badge)](/)
 - **PWA:** Ready
 - **Author:** Ammar
@@ -127,8 +127,8 @@ The **Hamun & Fatuha Saga** is a two-season epic containing over 80 parts of det
 ### Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-repo/story-website.git
-   cd story-website
+   git clone https://github.com/AmmarBasha2011/Hamun-and-Fatoha-Story-Website.git
+   cd Hamun-and-Fatoha-Story-Website
    ```
 2. Install dependencies:
    ```bash
